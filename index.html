@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>Naufal Timeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --card-bg: #0a0a0a;
+            --accent: #ff0000;
+            --text-main: #ffffff;
+            --text-dim: #777;
+            --border: #222;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            padding: 50px 70px;
+            gap: 50px;
+            overflow: hidden;
+        }
+
+        /* --- Left Side: The Timeline --- */
+        .timeline-section {
+            flex: 2.2;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .header-label {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        .class-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            padding: 35px 45px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: 0.4s;
+        }
+
+        /* Highlight the very next/current class */
+        .class-card.active {
+            border-color: var(--text-main);
+            background: #111;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.15);
+        }
+
+        .date-box {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 700;
+            width: 150px;
+            text-transform: uppercase;
+        }
+
+        .time-box {
+            font-size: 3.5rem;
+            font-weight: 900;
+            width: 280px;
+            border-left: 2px solid var(--border);
+            padding-left: 30px;
+            margin-left: 10px;
+        }
+
+        .info-box {
+            flex: 1;
+            text-align: right;
+        }
+
+        .name {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .room {
+            font-size: 1.8rem;
+            color: var(--text-dim);
+        }
+
+        .live-tag {
+            position: absolute;
+            top: -15px;
+            left: 50px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 900;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; }
+        }
+
+        /* --- Right Side --- */
+        .sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .clock-card {
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid var(--border);
+        }
+
+        #big-clock { font-size: 5.5rem; font-weight: 900; }
+        #big-date { color: var(--accent); font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; }
+
+        .player-card {
+            flex: 1;
+            background: #000;
+            border-radius: 40px;
+            border: 2px solid var(--border);
+            overflow: hidden;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <div class="timeline-section">
+        <div class="header-label">Upcoming Schedule</div>
+        <div id="timeline-root" style="display: flex; flex-direction: column; gap: 25px;">
+            </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="clock-card">
+            <div id="big-clock">00:00</div>
+            <div id="big-date">LOADING...</div>
+        </div>
+        <div class="player-card">
+           <iframe 
+            src="https://www.youtube.com/embed/XmpMqwjDWBc?autoplay=1&mute=1&controls=1&modestbranding=1" 
+            allow="autoplay; encrypted-media">
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        const schedule = [
+            { d: 1, dayName: 'Senin', s: 'Toefl Esyp', t: '08:00', r: 'KU1.02.10' },
+            { d: 1, dayName: 'Senin', s: 'Kalkulus Lanjut', t: '10:30', r: 'KU3.09.17' },
+            { d: 1, dayName: 'Senin', s: 'Alpro 2', t: '12:30', r: 'KU3.09.17' },
+            { d: 2, dayName: 'Selasa', s: 'Alpro 2 (Lab)', t: '06:30', r: 'LAB 0617' },
+            { d: 2, dayName: 'Selasa', s: 'Arsitektur Komputer', t: '10:30', r: 'TULT-1509' },
+            { d: 2, dayName: 'Selasa', s: 'Kalkulus Lanjut', t: '14:30', r: 'KU3.09.17' },
+            { d: 3, dayName: 'Rabu', s: 'Alpro 2', t: '08:30', r: 'TULT-1509' },
+            { d: 3, dayName: 'Rabu', s: 'Matriks & Ruang Vektor', t: '11:30', r: 'TULT-1510' },
+            { d: 4, dayName: 'Kamis', s: 'Toefl Esyp', t: '08:00', r: 'KU1.02.10' },
+            { d: 4, dayName: 'Kamis', s: 'Etika Dalam AI', t: '14:30', r: 'TULT-1509' },
+            { d: 5, dayName: 'Jumat', s: 'Pemodelan Basis Data', t: '08:30', r: 'TULT-1509' },
+            { d: 5, dayName: 'Jumat', s: 'Bahasa Inggris', t: '14:30', r: 'TULT-1510' }
+        ];
+
+        function updateTimeline() {
+            const now = new Date();
+            const currentDay = now.getDay(); // 0 is Sunday, 1 is Monday...
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+
+            // 1. Convert schedule to "comparable" timestamps for the whole week
+            let upcoming = schedule.map(item => {
+                const [h, m] = item.t.split(':');
+                const itemTime = parseInt(h) * 60 + parseInt(m);
+                
+                // Calculate distance in minutes from start of Sunday
+                let absoluteMinutes = (item.d * 1440) + itemTime;
+                let nowAbsolute = (currentDay * 1440) + currentTime;
+
+                // If class is earlier in the week, it's for "next week"
+                if (absoluteMinutes < nowAbsolute - 120) { // -120 to keep current class visible for 2 hours
+                    absoluteMinutes += 10080; // Add a full week
+                }
+                
+                return { ...item, abs: absoluteMinutes };
+            });
+
+            // 2. Sort by soonest
+            upcoming.sort((a, b) => a.abs - b.abs);
+
+            // 3. Take next 4
+            const nextFour = upcoming.slice(0, 4);
+
+            const root = document.getElementById('timeline-root');
+            root.innerHTML = '';
+
+            nextFour.forEach((c, index) => {
+                const nowAbs = (currentDay * 1440) + currentTime;
+                const isActive = (nowAbs >= c.abs && nowAbs <= c.abs + 120);
+
+                root.innerHTML += `
+                    <div class="class-card ${isActive ? 'active' : ''}">
+                        ${isActive ? '<div class="live-tag">ONGOING</div>' : ''}
+                        <div class="date-box">${c.dayName}</div>
+                        <div class="time-box">${c.t}</div>
+                        <div class="info-box">
+                            <div class="name">${c.s}</div>
+                            <div class="room">${c.r}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Update Clock
+            document.getElementById('big-clock').innerText = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('big-date').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase();
+        }
+
+        setInterval(updateTimeline, 10000);
+        updateTimeline();
+    </script>
+</body>
+</html>
