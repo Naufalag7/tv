@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1920, initial-scale=1.0">
-    <title>Naufal Neon Command Center</title>
+    <title>Naufal Mocha Command Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         :root {
-            --bg: #000000;
-            --card-bg: rgba(10, 10, 10, 0.9);
-            --accent: #ff0000;
-            --neon-glow: 0 0 15px rgba(255, 0, 0, 0.7), 0 0 30px rgba(255, 0, 0, 0.3);
-            --text-main: #ffffff;
-            --text-dim: #666;
-            --border: #1a1a1a;
+            --bg: #1e1e2e;
+            --card-bg: rgba(30, 30, 46, 0.7);
+            --accent: #f5e0dc; 
+            --secondary-accent: #cba6f7; 
+            --neon-glow: 0 0 20px rgba(203, 166, 247, 0.15);
+            --text-main: #cdd6f4;
+            --text-dim: #7f849c;
+            --border: #313244;
+            --surface: #181825;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,12 +28,11 @@
             height: 100vh;
             display: flex;
             padding: 50px 70px;
-            gap: 50px;
+            gap: 40px;
             overflow: hidden;
             position: relative;
         }
 
-        /* Particle Background */
         #particles-js {
             position: absolute;
             width: 100%; height: 100%;
@@ -38,69 +40,98 @@
         }
 
         .timeline-section, .sidebar { position: relative; z-index: 2; }
-        .timeline-section { flex: 2.2; display: flex; flex-direction: column; gap: 30px; }
+        .timeline-section { flex: 2.2; display: flex; flex-direction: column; gap: 25px; }
 
         .header-label {
-            font-size: 2rem; font-weight: 900; color: var(--accent);
-            text-transform: uppercase; letter-spacing: 6px; margin-bottom: 10px;
-            text-shadow: var(--neon-glow);
+            font-size: 1.2rem; font-weight: 900; color: var(--secondary-accent);
+            text-transform: uppercase; letter-spacing: 8px; margin-bottom: 5px;
         }
 
         .class-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            padding: 35px 45px;
-            border-radius: 40px;
+            padding: 25px 40px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(15px);
             transition: all 0.4s ease;
         }
 
-        /* Neon Active Flicker */
-        @keyframes neonFlicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { border-color: var(--accent); box-shadow: var(--neon-glow); }
-            20%, 22%, 24%, 55% { border-color: #330000; box-shadow: none; }
+        .class-card.active { 
+            border-color: var(--secondary-accent);
+            box-shadow: var(--neon-glow);
+            background: rgba(49, 50, 68, 0.5);
         }
 
-        .class-card.active { animation: neonFlicker 5s infinite; background: rgba(20, 0, 0, 0.4); }
-
         .live-dot {
-            width: 12px; height: 12px; background: var(--accent);
+            width: 10px; height: 10px; background: var(--secondary-accent);
             border-radius: 50%; display: inline-block; margin-right: 15px;
-            box-shadow: 0 0 10px var(--accent); animation: blink 1.5s infinite;
+            animation: blink 1.5s infinite;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        .date-box { font-size: 1.5rem; color: var(--accent); font-weight: 700; width: 150px; text-transform: uppercase; }
+        .date-box { font-size: 1.2rem; color: var(--secondary-accent); font-weight: 700; width: 130px; }
 
         .time-box {
-            display: flex; flex-direction: column; width: 280px;
-            border-left: 2px solid var(--border); padding-left: 30px; margin-left: 10px;
+            display: flex; flex-direction: column; width: 220px;
+            border-left: 2px solid var(--border); padding-left: 25px;
         }
 
-        .start-time { font-size: 3.5rem; font-weight: 900; line-height: 1; }
-        .end-time { font-size: 1.8rem; color: var(--text-dim); font-weight: 700; margin-top: 5px; }
+        .start-time { font-size: 2.5rem; font-weight: 900; }
+        .end-time { font-size: 1.3rem; color: var(--text-dim); font-weight: 700; }
 
         .info-box { flex: 1; text-align: right; }
-        .name { font-size: 2.8rem; font-weight: 700; margin-bottom: 5px; }
-        .room { font-size: 1.8rem; color: var(--text-dim); }
+        .name { font-size: 2.2rem; font-weight: 700; }
+        .room { font-size: 1.3rem; color: var(--text-dim); }
 
-        /* Sidebar Elements */
-        .sidebar { flex: 1; display: flex; flex-direction: column; gap: 40px; }
+        /* Sidebar */
+        .sidebar { flex: 1.1; display: flex; flex-direction: column; gap: 25px; }
+        
+        /* Weather Module */
+        .weather-card {
+            background: var(--card-bg); border-radius: 30px; padding: 25px 35px;
+            border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
+        }
+        .weather-main { display: flex; align-items: center; gap: 20px; }
+        .temp-now { font-size: 3.5rem; font-weight: 900; color: #fff; }
+        .weather-icon-large { font-size: 3rem; color: var(--accent); }
+        
+        .forecast { display: flex; gap: 20px; border-left: 1px solid var(--border); padding-left: 25px; }
+        .forecast-item { text-align: center; }
+        .forecast-time { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; }
+        .forecast-temp { font-weight: 700; color: var(--secondary-accent); }
+
         .clock-card {
-            background: var(--card-bg); border-radius: 40px; padding: 40px;
+            background: var(--card-bg); border-radius: 30px; padding: 30px;
             text-align: center; border: 1px solid var(--border);
         }
-        #big-clock { font-size: 6rem; font-weight: 900; text-shadow: var(--neon-glow); }
-        #big-date { color: var(--accent); font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; }
+        #big-clock { font-size: 5rem; font-weight: 900; color: #fff; }
+        #big-date { color: var(--accent); font-size: 1rem; font-weight: 700; letter-spacing: 3px; }
 
-        .player-card {
-            flex: 1; background: #000; border-radius: 40px;
-            border: 1px solid var(--border); overflow: hidden;
-            position: relative; padding-top: 56.25%; height: 0;
+        /* Video Module - Size Maintained */
+        .video-module {
+            background: var(--surface);
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
         }
-        iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* Fixed 1080p Aspect Ratio */
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -108,17 +139,44 @@
     <div id="particles-js"></div>
 
     <div class="timeline-section">
-        <div class="header-label">TIMELINE</div>
-        <div id="timeline-root" style="display: flex; flex-direction: column; gap: 25px;"></div>
+        <div class="header-label">Terminal / Schedule</div>
+        <div id="timeline-root" style="display: flex; flex-direction: column; gap: 15px;"></div>
     </div>
 
     <div class="sidebar">
+        <div class="weather-card">
+            <div class="weather-main">
+                <i class="ph-fill ph-cloud-sun weather-icon-large"></i>
+                <div class="temp-now">28°C</div>
+            </div>
+            <div class="forecast">
+                <div class="forecast-item">
+                    <div class="forecast-time">14:00</div>
+                    <i class="ph ph-sun"></i>
+                    <div class="forecast-temp">30°</div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-time">17:00</div>
+                    <i class="ph ph-cloud-rain"></i>
+                    <div class="forecast-temp">26°</div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-time">20:00</div>
+                    <i class="ph ph-moon"></i>
+                    <div class="forecast-temp">24°</div>
+                </div>
+            </div>
+        </div>
+
         <div class="clock-card">
             <div id="big-clock">00:00</div>
             <div id="big-date">LOADING...</div>
         </div>
-        <div class="player-card">
-            <iframe src="https://www.youtube.com/embed/XmpMqwjDWBc?autoplay=1&mute=1&controls=1"></iframe>
+
+        <div class="video-module">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/XmpMqwjDWBc?autoplay=1&mute=1&controls=1&modestbranding=1"></iframe>
+            </div>
         </div>
     </div>
 
@@ -141,12 +199,12 @@
 
         particlesJS("particles-js", {
             "particles": {
-                "number": { "value": 80 },
-                "color": { "value": "#ff0000" },
-                "opacity": { "value": 0.3 },
-                "size": { "value": 3 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ff0000", "opacity": 0.1 },
-                "move": { "enable": true, "speed": 1 }
+                "number": { "value": 30 },
+                "color": { "value": "#cba6f7" },
+                "opacity": { "value": 0.15 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#cba6f7", "opacity": 0.05 },
+                "move": { "enable": true, "speed": 0.4 }
             }
         });
 
@@ -175,7 +233,7 @@
                         <div class="date-box">${isActive ? '<span class="live-dot"></span>LIVE' : c.dayName}</div>
                         <div class="time-box">
                             <span class="start-time">${c.t}</span>
-                            <span class="end-time">Until ${c.end}</span>
+                            <span class="end-time">${c.end}</span>
                         </div>
                         <div class="info-box">
                             <div class="name">${c.s}</div>
